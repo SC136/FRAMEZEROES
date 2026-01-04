@@ -1,0 +1,35 @@
+# Files to ignore during Vercel deployment
+# Most of these are already in .gitignore, but this ensures they're not uploaded
+
+# Dependencies
+node_modules
+
+# Environment files (use Vercel dashboard for env vars)
+.env
+.env.local
+.env*.local
+
+# Development
+.next
+.cache
+
+# Testing
+coverage
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# Documentation (optional - remove if you want these on Vercel)
+PUBLISH_GUIDE.md

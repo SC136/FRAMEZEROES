@@ -2,8 +2,8 @@ import { getWallpapers, getUniqueAnimes, updateWallpaperToFile, deleteWallpaperF
 
 export async function GET() {
   try {
-    const wallpapers = getWallpapers();
-    const animes = getUniqueAnimes();
+    const wallpapers = await getWallpapers();
+    const animes = await getUniqueAnimes();
     
     return new Response(JSON.stringify({ wallpapers, animes }), {
       status: 200,
@@ -48,7 +48,7 @@ export async function PUT(request) {
       });
     }
 
-    const updated = updateWallpaperToFile(index, wallpaper);
+    const updated = await updateWallpaperToFile(index, wallpaper);
     return new Response(JSON.stringify({ success: true, wallpaper: updated }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },
@@ -83,7 +83,7 @@ export async function DELETE(request) {
       });
     }
 
-    const deleted = deleteWallpaperFromFile(index);
+    const deleted = await deleteWallpaperFromFile(index);
     return new Response(JSON.stringify({ success: true, deleted }), {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

@@ -1,7 +1,28 @@
 {
+  "type": "module",
   "name": "anime-wallpapers",
   "version": "1.0.0",
-  "description": "Anime wallpaper curation site",
+  "description": "A modern, curated collection of high-quality anime wallpapers built with Next.js",
+  "author": "SC136",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SC136/FRAMEZEROES.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SC136/FRAMEZEROES/issues"
+  },
+  "homepage": "https://github.com/SC136/FRAMEZEROES#readme",
+  "keywords": [
+    "anime",
+    "wallpapers",
+    "nextjs",
+    "react",
+    "gallery",
+    "anime-wallpapers",
+    "curated",
+    "high-quality"
+  ],
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -9,7 +30,9 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "dotenv": "^17.2.3",
     "next": "^16.1.1",
+    "pg": "^8.16.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

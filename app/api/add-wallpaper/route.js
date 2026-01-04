@@ -31,7 +31,7 @@ export async function POST(request) {
       addedOn: new Date().toISOString().split('T')[0],
     };
 
-    addWallpaperToFile(newWallpaper);
+    await addWallpaperToFile(newWallpaper);
 
     return new Response(JSON.stringify({ success: true, wallpaper: newWallpaper }), {
       status: 200,
