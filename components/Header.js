@@ -1,26 +1,18 @@
 'use client';
 
 import Link from 'next/link';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef } from 'react';
 
 export default function Header({ animes = [] }) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef(null);
   const closeTimeoutRef = useRef(null);
 
   const visibleCount = 5;
   const visibleAnimes = animes.slice(0, visibleCount);
   const hasMore = animes.length > visibleCount;
 
-  const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
-
-  const handleCategoryMouseEnter = (e) => {
+  const handleMouseEnter = () => {
     clearTimeout(closeTimeoutRef.current);
-    const rect = e.currentTarget.getBoundingClientRect();
-    setDropdownPos({
-      top: rect.bottom + 8,
-      left: rect.left,
-    });
     setDropdownOpen(true);
   };
 
@@ -28,11 +20,6 @@ export default function Header({ animes = [] }) {
     closeTimeoutRef.current = setTimeout(() => {
       setDropdownOpen(false);
     }, 150);
-  };
-
-  const handleMouseEnter = () => {
-    clearTimeout(closeTimeoutRef.current);
-    setDropdownOpen(true);
   };
 
   return (
@@ -43,46 +30,37 @@ export default function Header({ animes = [] }) {
       <nav>
         <div
           style={styles.categoryContainer}
-          ref={dropdownRef}
-          onMouseEnter={handleCategoryMouseEnter}
+          onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           <button style={styles.categoryButton}>Categories</button>
-        </div>
 
-        {dropdownOpen && (
-          <div
-            style={{
-              ...styles.dropdown,
-              top: `${dropdownPos.top}px`,
-              left: `${dropdownPos.left}px`,
-            }}
-            onMouseEnter={handleMouseEnter}
-            onMouseLeave={handleMouseLeave}
-          >
-            <div style={styles.dropdownContent}>
-              {visibleAnimes.map(anime => (
+          {dropdownOpen && (
+            <div style={styles.dropdown}>
+              <div style={styles.dropdownContent}>
+                {visibleAnimes.map(anime => (
+                  <Link
+                    key={anime}
+                    href={`/anime/${anime.toLowerCase().replace(/\s+/g, '-')}`}
+                    style={styles.dropdownItem}
+                    onClick={() => setDropdownOpen(false)}
+                  >
+                    {anime}
+                  </Link>
+                ))}
+              </div>
+              {hasMore && (
                 <Link
-                  key={anime}
-                  href={`/anime/${anime.toLowerCase().replace(/\s+/g, '-')}`}
-                  style={styles.dropdownItem}
+                  href="/categories"
+                  style={styles.viewAllButton}
                   onClick={() => setDropdownOpen(false)}
                 >
-                  {anime}
+                  View All Categories
                 </Link>
-              ))}
+              )}
             </div>
-            {hasMore && (
-              <Link
-                href="/categories"
-                style={styles.viewAllButton}
-                onClick={() => setDropdownOpen(false)}
-              >
-                View All Categories
-              </Link>
-            )}
-          </div>
-        )}
+          )}
+        </div>
 
         <Link href="/credits">Credits</Link>
       </nav>
@@ -123,7 +101,10 @@ const styles = {
     letterSpacing: '0.5px',
   },
   dropdown: {
-    position: 'fixed',
+    position: 'absolute',
+    top: '100%',
+    right: 0,
+    marginTop: '8px',
     backgroundColor: '#1a1a1a',
     border: '1px solid #333',
     borderRadius: '6px',

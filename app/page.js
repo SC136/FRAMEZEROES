@@ -3,24 +3,30 @@
 import { useEffect, useMemo, useState } from 'react';
 import WallpaperGrid from '@/components/WallpaperGrid';
 import Header from '@/components/Header';
+import { SkeletonGrid } from '@/components/Skeleton';
 
 export default function Home() {
   const [animes, setAnimes] = useState([]);
   const [allWallpapers, setAllWallpapers] = useState([]);
   const [search, setSearch] = useState('');
   const [sort, setSort] = useState('newest');
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
+      setIsLoading(true);
       const res = await fetch('/api/wallpapers');
       const data = await res.json();
       setAnimes(data.animes);
       setAllWallpapers(data.wallpapers);
+      setIsLoading(false);
     };
-    
+
     fetchData();
   }, []);
   const filteredItems = useMemo(() => {
+    if (!allWallpapers || allWallpapers.length === 0) return [];
+
     const q = search.toLowerCase().trim();
 
     const filtered = allWallpapers.filter(w => {
@@ -85,7 +91,11 @@ export default function Home() {
             </select>
           </div>
         </section>
-        <WallpaperGrid items={filteredItems} allWallpapers={allWallpapers} />
+        {isLoading ? (
+          <SkeletonGrid count={12} />
+        ) : (
+          <WallpaperGrid items={filteredItems} allWallpapers={allWallpapers} />
+        )}
       </main>
     </>
   );
