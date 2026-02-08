@@ -150,12 +150,12 @@ export default function Admin() {
       const isEdit = !isNew && editIndex !== null;
       const payload = isEdit
         ? {
-            index: editIndex,
-            wallpaper: {
-              ...formData,
-              addedOn: formData.addedOn || wallpapers[editIndex]?.addedOn || new Date().toISOString().split('T')[0],
-            },
-          }
+          index: editIndex,
+          wallpaper: {
+            ...formData,
+            addedOn: formData.addedOn || wallpapers[editIndex]?.addedOn || new Date().toISOString().split('T')[0],
+          },
+        }
         : formData;
 
       const response = await fetch(isEdit ? '/api/wallpapers' : '/api/add-wallpaper', {
@@ -322,6 +322,21 @@ export default function Admin() {
                   style={styles.input}
                   required
                 />
+                {formData.image && (
+                  <div style={styles.imagePreview}>
+                    <img
+                      src={formData.image}
+                      alt="Preview"
+                      style={styles.previewImage}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                      onLoad={(e) => {
+                        e.target.style.display = 'block';
+                      }}
+                    />
+                  </div>
+                )}
               </div>
 
               <div style={styles.formGroup}>
@@ -555,5 +570,18 @@ const styles = {
     gap: '0.75rem',
     justifyContent: 'flex-end',
     marginTop: '0.5rem',
+  },
+  imagePreview: {
+    marginTop: '0.75rem',
+    borderRadius: '8px',
+    overflow: 'hidden',
+    border: '1px solid #333',
+    backgroundColor: '#1a1a1a',
+  },
+  previewImage: {
+    width: '100%',
+    maxHeight: '200px',
+    objectFit: 'contain',
+    display: 'block',
   },
 };

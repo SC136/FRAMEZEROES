@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import WallpaperGrid from '@/components/WallpaperGrid';
 import Header from '@/components/Header';
 import { SkeletonGrid } from '@/components/Skeleton';
+import RandomButton from '@/components/RandomButton';
 
 export default function Home() {
   const [animes, setAnimes] = useState([]);
@@ -97,6 +98,8 @@ export default function Home() {
           <WallpaperGrid items={filteredItems} allWallpapers={allWallpapers} />
         )}
       </main>
+
+      <RandomButton totalCount={allWallpapers.length} />
     </>
   );
 }
