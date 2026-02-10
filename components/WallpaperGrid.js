@@ -18,7 +18,7 @@ function LazyImage({ src, alt }) {
           observer.disconnect();
         }
       },
-      { rootMargin: '100px' }
+      { rootMargin: '200px' }
     );
 
     if (imgRef.current) {
@@ -48,12 +48,10 @@ export default function WallpaperGrid({ items, allWallpapers = [] }) {
   const [visibleCount, setVisibleCount] = useState(ITEMS_PER_PAGE);
   const loaderRef = useRef(null);
 
-  // Helper to find the index of an item in the full wallpapers list
   const getWallpaperId = (item) => {
     return allWallpapers.findIndex(w => w.image === item.image && w.anime === item.anime);
   };
 
-  // Infinite scroll observer
   const handleObserver = useCallback((entries) => {
     const [entry] = entries;
     if (entry.isIntersecting && visibleCount < items.length) {
@@ -63,7 +61,7 @@ export default function WallpaperGrid({ items, allWallpapers = [] }) {
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleObserver, {
-      rootMargin: '200px',
+      rootMargin: '300px',
     });
 
     if (loaderRef.current) {
@@ -73,7 +71,6 @@ export default function WallpaperGrid({ items, allWallpapers = [] }) {
     return () => observer.disconnect();
   }, [handleObserver]);
 
-  // Reset visible count when items change (e.g., search/filter)
   useEffect(() => {
     setVisibleCount(ITEMS_PER_PAGE);
   }, [items]);
@@ -96,8 +93,9 @@ export default function WallpaperGrid({ items, allWallpapers = [] }) {
               <div className="overlay">
                 <span className="anime">{w.anime}</span>
                 <span className="artist">
-                  by <a href={w.artistLink} target="_blank" rel="noopener noreferrer">{w.artist}</a>
-                  · {w.source}
+                  <a href={w.artistLink} target="_blank" rel="noopener noreferrer">{w.artist}</a>
+                  {' · '}
+                  <span style={{ color: 'var(--text-muted)' }}>{w.source}</span>
                 </span>
               </div>
             </article>
