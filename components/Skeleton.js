@@ -9,11 +9,10 @@ export function SkeletonCard({ height = 280 }) {
 }
 
 export function SkeletonGrid({ count = 12 }) {
-    // Create varied heights to mimic masonry layout
-    const heights = [280, 350, 240, 320, 300, 260, 380, 290, 340, 250, 310, 270];
+    const heights = [300, 380, 260, 340, 320, 280, 400, 310, 360, 270, 330, 290];
 
     return (
-        <section className="masonry">
+        <section className="masonry" style={{ animation: 'cardReveal 0.5s cubic-bezier(0.16, 1, 0.3, 1) both' }}>
             {Array.from({ length: count }).map((_, idx) => (
                 <SkeletonCard key={idx} height={heights[idx % heights.length]} />
             ))}

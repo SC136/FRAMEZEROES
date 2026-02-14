@@ -203,32 +203,48 @@ export default function Admin() {
     <>
       <Header animes={animes} />
 
-      <main style={{ maxWidth: '1100px', margin: '0 auto' }}>
-        <h1>Admin Panel</h1>
+      <main style={styles.main}>
+        <div style={styles.pageHeader}>
+          <span style={styles.pageTag}>Admin</span>
+          <h1 style={styles.pageTitle}>Manage Wallpapers</h1>
+        </div>
 
         {!isAuthenticated ? (
           <form onSubmit={handleLogin} style={styles.form}>
-            <div style={styles.formGroup}>
-              <label htmlFor="password">Password:</label>
-              <input
-                id="password"
-                type="password"
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                placeholder="Enter admin password"
-                style={styles.input}
-                required
-              />
+            <div style={styles.loginCard}>
+              <div style={styles.lockIcon}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                </svg>
+              </div>
+              <div style={styles.formGroup}>
+                <label htmlFor="password" style={styles.label}>Password</label>
+                <input
+                  id="password"
+                  type="password"
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  placeholder="Enter admin password"
+                  style={styles.input}
+                  required
+                />
+              </div>
+              <button type="submit" style={styles.button}>
+                Authenticate
+              </button>
             </div>
-            <button type="submit" style={styles.button}>
-              Login
-            </button>
           </form>
         ) : (
           <section style={styles.gridSection}>
             <div style={{ ...styles.card, ...styles.addCard }} onClick={openNewModal}>
-              <div style={styles.addIcon}>+</div>
-              <div>Add New Wallpaper</div>
+              <div style={styles.addIcon}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="12" y1="5" x2="12" y2="19" />
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                </svg>
+              </div>
+              <div style={styles.addText}>Add Wallpaper</div>
             </div>
 
             {wallpapers.map((w, idx) => (
@@ -236,7 +252,7 @@ export default function Admin() {
                 key={`${w.anime}-${idx}`}
                 style={{
                   ...styles.card,
-                  backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.75)), url(${w.image})`,
+                  backgroundImage: `linear-gradient(180deg, rgba(8,8,10,0.3), rgba(8,8,10,0.85)), url(${w.image})`,
                   backgroundSize: 'cover',
                   backgroundPosition: 'center',
                   position: 'relative',
@@ -248,7 +264,10 @@ export default function Admin() {
                   aria-label="Delete"
                   title="Delete wallpaper"
                 >
-                  ✕
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
                 </button>
                 <div
                   style={styles.cardOverlay}
@@ -257,7 +276,7 @@ export default function Admin() {
                   <div style={styles.cardTitle}>{w.anime}</div>
                   <div style={styles.cardMeta}>{w.artist}</div>
                   <div style={styles.cardMeta}>{w.source}</div>
-                  <div style={styles.cardMeta}>Added: {w.addedOn || '—'}</div>
+                  <div style={styles.cardDate}>{w.addedOn || '—'}</div>
                 </div>
               </div>
             ))}
@@ -268,9 +287,13 @@ export default function Admin() {
           <div
             style={{
               marginTop: '1rem',
-              padding: '1rem',
-              backgroundColor: message.includes('Error') ? '#4a1f1f' : '#1f4a1f',
-              borderRadius: '4px',
+              padding: '0.85rem 1.15rem',
+              backgroundColor: message.includes('Error') ? 'rgba(255, 45, 85, 0.08)' : 'rgba(74, 222, 128, 0.08)',
+              border: `1px solid ${message.includes('Error') ? 'rgba(255, 45, 85, 0.2)' : 'rgba(74, 222, 128, 0.2)'}`,
+              borderRadius: 'var(--radius-md)',
+              color: message.includes('Error') ? '#ff6b8a' : '#4ade80',
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: '0.9rem',
               textAlign: 'center',
             }}
           >
@@ -283,15 +306,21 @@ export default function Admin() {
         <div style={styles.modalOverlay}>
           <div style={styles.modal}>
             <div style={styles.modalHeader}>
-              <h2 style={{ margin: 0 }}>{isNew ? 'Add Wallpaper' : 'Edit Wallpaper'}</h2>
+              <div>
+                <span style={styles.modalTag}>{isNew ? 'New' : 'Edit'}</span>
+                <h2 style={styles.modalTitle}>{isNew ? 'Add Wallpaper' : 'Edit Wallpaper'}</h2>
+              </div>
               <button onClick={closeModal} style={styles.closeButton} aria-label="Close">
-                ✕
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18" />
+                  <line x1="6" y1="6" x2="18" y2="18" />
+                </svg>
               </button>
             </div>
 
             <form onSubmit={handleSubmit} style={styles.form}>
               <div style={styles.formGroup}>
-                <label htmlFor="anime">Anime Title:</label>
+                <label htmlFor="anime" style={styles.label}>Anime Title</label>
                 <input
                   id="anime"
                   type="text"
@@ -311,7 +340,7 @@ export default function Admin() {
               </div>
 
               <div style={styles.formGroup}>
-                <label htmlFor="image">Image URL:</label>
+                <label htmlFor="image" style={styles.label}>Image URL</label>
                 <input
                   id="image"
                   type="url"
@@ -340,7 +369,7 @@ export default function Admin() {
               </div>
 
               <div style={styles.formGroup}>
-                <label htmlFor="artist">Artist Name:</label>
+                <label htmlFor="artist" style={styles.label}>Artist Name</label>
                 <input
                   id="artist"
                   type="text"
@@ -360,7 +389,7 @@ export default function Admin() {
               </div>
 
               <div style={styles.formGroup}>
-                <label htmlFor="artistLink">Artist Link:</label>
+                <label htmlFor="artistLink" style={styles.label}>Artist Link</label>
                 <input
                   id="artistLink"
                   type="url"
@@ -380,7 +409,7 @@ export default function Admin() {
               </div>
 
               <div style={styles.formGroup}>
-                <label htmlFor="source">Source:</label>
+                <label htmlFor="source" style={styles.label}>Source</label>
                 <input
                   id="source"
                   type="text"
@@ -400,6 +429,9 @@ export default function Admin() {
               </div>
 
               <div style={styles.modalActions}>
+                <button type="button" onClick={closeModal} style={styles.secondaryButton}>
+                  Cancel
+                </button>
                 <button
                   type="submit"
                   disabled={loading}
@@ -413,9 +445,6 @@ export default function Admin() {
                     ? (isNew ? 'Adding...' : 'Updating...')
                     : (isNew ? 'Add Wallpaper' : 'Update Wallpaper')}
                 </button>
-                <button type="button" onClick={closeModal} style={styles.secondaryButton}>
-                  Cancel
-                </button>
               </div>
             </form>
           </div>
@@ -426,118 +455,189 @@ export default function Admin() {
 }
 
 const styles = {
+  main: {
+    maxWidth: '1100px',
+    margin: '0 auto',
+    animation: 'cardReveal 0.6s cubic-bezier(0.16, 1, 0.3, 1) both',
+  },
+  pageHeader: {
+    marginBottom: '2rem',
+  },
+  pageTag: {
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '0.65rem',
+    fontWeight: 500,
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    color: 'var(--accent)',
+    display: 'block',
+    marginBottom: '0.5rem',
+  },
+  pageTitle: {
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: 'clamp(1.8rem, 3.5vw, 2.5rem)',
+    fontWeight: 700,
+    letterSpacing: '-0.03em',
+    color: 'var(--text-primary)',
+    margin: 0,
+    lineHeight: 1.1,
+  },
   form: {
     display: 'flex',
     flexDirection: 'column',
+    gap: '1rem',
+  },
+  loginCard: {
+    display: 'flex',
+    flexDirection: 'column',
     gap: '1.25rem',
-    marginTop: '1rem',
+    maxWidth: '380px',
+    padding: '2rem',
+    background: 'var(--bg-surface)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-lg)',
+  },
+  lockIcon: {
+    opacity: 0.5,
   },
   formGroup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.5rem',
+    gap: '0.4rem',
+  },
+  label: {
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '0.65rem',
+    fontWeight: 500,
+    letterSpacing: '0.1em',
+    textTransform: 'uppercase',
+    color: 'var(--text-muted)',
   },
   input: {
-    padding: '0.75rem',
-    backgroundColor: '#1a1a1a',
-    border: '1px solid #333',
-    borderRadius: '4px',
-    color: '#eaeaea',
-    fontSize: '1rem',
+    padding: '0.7rem 0.85rem',
+    backgroundColor: 'var(--bg-elevated)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-md)',
+    color: 'var(--text-primary)',
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '0.9rem',
+    outline: 'none',
+    transition: 'border-color 0.2s ease',
   },
   button: {
-    padding: '0.75rem 1.5rem',
-    backgroundColor: '#007bff',
+    padding: '0.7rem 1.25rem',
+    background: 'var(--accent)',
     color: '#fff',
     border: 'none',
-    borderRadius: '4px',
+    borderRadius: 'var(--radius-md)',
     cursor: 'pointer',
-    fontSize: '1rem',
-    fontWeight: '500',
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: '0.85rem',
+    fontWeight: 600,
+    letterSpacing: '0.02em',
+    transition: 'opacity 0.2s ease',
   },
   secondaryButton: {
-    padding: '0.75rem 1.5rem',
-    backgroundColor: '#444',
-    color: '#fff',
-    border: 'none',
-    borderRadius: '4px',
+    padding: '0.7rem 1.25rem',
+    background: 'var(--bg-elevated)',
+    color: 'var(--text-secondary)',
+    border: '1px solid var(--border)',
+    borderRadius: 'var(--radius-md)',
     cursor: 'pointer',
-    fontSize: '1rem',
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: '0.85rem',
+    fontWeight: 500,
   },
   gridSection: {
     display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+    gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
     gap: '1rem',
-    marginTop: '1.5rem',
   },
   card: {
     position: 'relative',
     minHeight: '200px',
     padding: '1rem',
-    borderRadius: '10px',
-    border: '1px solid #333',
-    backgroundColor: '#111',
-    color: '#eaeaea',
+    borderRadius: 'var(--radius-lg)',
+    border: '1px solid var(--border)',
+    backgroundColor: 'var(--bg-surface)',
+    color: 'var(--text-primary)',
     display: 'flex',
     flexDirection: 'column',
     gap: '0.35rem',
     cursor: 'pointer',
-    transition: 'transform 0.15s ease, border-color 0.15s ease',
+    transition: 'all 0.2s ease',
+    overflow: 'hidden',
   },
   addCard: {
     alignItems: 'center',
     justifyContent: 'center',
     borderStyle: 'dashed',
-    borderColor: '#444',
+    borderColor: 'var(--border-hover)',
     textAlign: 'center',
+    gap: '0.75rem',
   },
   addIcon: {
-    width: '56px',
-    height: '56px',
+    width: '48px',
+    height: '48px',
     borderRadius: '50%',
-    border: '2px solid #555',
+    border: '1.5px solid var(--border-hover)',
     display: 'grid',
     placeItems: 'center',
-    fontSize: '1.8rem',
-    marginBottom: '0.5rem',
+    color: 'var(--text-muted)',
+  },
+  addText: {
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: '0.85rem',
+    fontWeight: 500,
+    color: 'var(--text-muted)',
   },
   cardTitle: {
+    fontFamily: "'Space Grotesk', sans-serif",
     fontWeight: 600,
-    fontSize: '1.05rem',
+    fontSize: '1rem',
+    color: 'var(--text-primary)',
   },
   cardMeta: {
-    fontSize: '0.9rem',
-    opacity: 0.85,
+    fontFamily: "'DM Sans', sans-serif",
+    fontSize: '0.8rem',
+    color: 'var(--text-secondary)',
+  },
+  cardDate: {
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '0.65rem',
+    color: 'var(--text-muted)',
+    marginTop: 'auto',
   },
   cardOverlay: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '0.35rem',
+    gap: '0.25rem',
     cursor: 'pointer',
+    marginTop: 'auto',
   },
   deleteButton: {
     position: 'absolute',
     top: '8px',
     right: '8px',
-    width: '32px',
-    height: '32px',
-    backgroundColor: 'rgba(200, 30, 30, 0.85)',
+    width: '28px',
+    height: '28px',
+    backgroundColor: 'rgba(255, 45, 85, 0.85)',
     color: '#fff',
     border: 'none',
-    borderRadius: '4px',
+    borderRadius: 'var(--radius-sm)',
     cursor: 'pointer',
-    fontSize: '1.2rem',
-    fontWeight: 'bold',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'background-color 0.2s ease',
+    transition: 'all 0.2s ease',
     zIndex: 10,
+    backdropFilter: 'blur(4px)',
   },
   modalOverlay: {
     position: 'fixed',
     inset: 0,
-    backgroundColor: 'rgba(0,0,0,0.75)',
+    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backdropFilter: 'blur(8px)',
     display: 'grid',
     placeItems: 'center',
     zIndex: 1000,
@@ -546,24 +646,47 @@ const styles = {
   modal: {
     width: '100%',
     maxWidth: '520px',
-    backgroundColor: '#0f0f0f',
-    borderRadius: '10px',
-    border: '1px solid #333',
-    padding: '1.25rem 1.5rem',
-    boxShadow: '0 20px 50px rgba(0,0,0,0.4)',
+    maxHeight: '90vh',
+    overflowY: 'auto',
+    backgroundColor: 'var(--bg-surface)',
+    borderRadius: 'var(--radius-xl)',
+    border: '1px solid var(--border)',
+    padding: '1.5rem',
+    boxShadow: '0 24px 64px rgba(0, 0, 0, 0.5)',
   },
   modalHeader: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     justifyContent: 'space-between',
     gap: '1rem',
+    marginBottom: '1.5rem',
+  },
+  modalTag: {
+    fontFamily: "'JetBrains Mono', monospace",
+    fontSize: '0.6rem',
+    fontWeight: 500,
+    letterSpacing: '0.12em',
+    textTransform: 'uppercase',
+    color: 'var(--accent)',
+    display: 'block',
+    marginBottom: '0.25rem',
+  },
+  modalTitle: {
+    fontFamily: "'Space Grotesk', sans-serif",
+    fontSize: '1.4rem',
+    fontWeight: 700,
+    letterSpacing: '-0.02em',
+    color: 'var(--text-primary)',
+    margin: 0,
   },
   closeButton: {
     background: 'transparent',
     border: 'none',
-    color: '#ccc',
-    fontSize: '1.2rem',
+    color: 'var(--text-muted)',
     cursor: 'pointer',
+    padding: '0.25rem',
+    borderRadius: 'var(--radius-sm)',
+    transition: 'color 0.2s ease',
   },
   modalActions: {
     display: 'flex',
@@ -572,15 +695,15 @@ const styles = {
     marginTop: '0.5rem',
   },
   imagePreview: {
-    marginTop: '0.75rem',
-    borderRadius: '8px',
+    marginTop: '0.5rem',
+    borderRadius: 'var(--radius-md)',
     overflow: 'hidden',
-    border: '1px solid #333',
-    backgroundColor: '#1a1a1a',
+    border: '1px solid var(--border)',
+    backgroundColor: 'var(--bg-elevated)',
   },
   previewImage: {
     width: '100%',
-    maxHeight: '200px',
+    maxHeight: '180px',
     objectFit: 'contain',
     display: 'block',
   },
